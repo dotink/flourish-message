@@ -58,7 +58,7 @@
 				$domain = self::DEFAULT_DOMAIN;
 			}
 
-			return implode(self::KEY_SEPARATOR, [__CLASS__, $domain, $name]);
+			return implode(self::KEY_SEPARATOR, array(__CLASS__, $domain, $name));
 		}
 
 

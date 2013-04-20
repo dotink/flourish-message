@@ -3,6 +3,7 @@
 	"description": "Session based messaging for alerts and notifications",
 	"keywords": ["alert", "notification", "message"],
 	"license": "AGPL 3.0",
+	"type": "opus-package",
 	"authors": [
 		{
 			"name": "Will Bond",
@@ -22,7 +23,7 @@
 		"classmap": ["src/"]
 	},
 	"extra": {
-		"tails": {
+		"opus": {
 			"inkwell-2.0": {
 				"src": "library/flourish"
 			}

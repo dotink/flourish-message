@@ -2,7 +2,7 @@
 ## Provides session-based messaging for page-to-page communication
 
 _Copyright (c) 2007-2012 Will Bond, others_.
-[http://flourishlib.com/license](http://flourishlib.com/license)
+_Please reference the LICENSE.md file at the root of this distribution_
 
 #### Namespace
 

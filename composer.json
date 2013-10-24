@@ -2,7 +2,7 @@
 	"name": "dotink/flourish-message",
 	"description": "Session based messaging for alerts and notifications",
 	"keywords": ["alert", "notification", "message"],
-	"license": "AGPL 3.0",
+	"license": "AGPL-3.0",
 	"type": "opus-package",
 	"authors": [
 		{

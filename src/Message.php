@@ -45,6 +45,22 @@
 
 
 		/**
+		 * Create a new Message
+		 *
+		 * @static
+		 * @access public
+		 * @param string $name The name of the message
+		 * @param string $message The meessage text, default NULL
+		 * @param string $domain The domain of the message, default NULL
+		 * @return Message The new message
+		 */
+		static public function create($name, $message = NULL, $domain = NULL)
+		{
+			return new self($name, $domain, $message);
+		}
+
+
+		/**
 		 * Get a normalized key for the message
 		 *
 		 * @access private
@@ -71,8 +87,12 @@
 		 * @param string $message The meessage text, default NULL
 		 * @return void
 		 */
-		public function __construct($name, $domain = NULL, $message = NULL)
+		public function __construct($name = NULL, $domain = NULL, $message = NULL)
 		{
+			if ($name == NULL) {
+				return;
+			}
+
 			$this->name = (string) $name;
 
 			if (func_num_args() == 2) {

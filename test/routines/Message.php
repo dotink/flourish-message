@@ -152,7 +152,7 @@
 
 				assert('Dotink\Flourish\Message::compose')
 					-> using  ($msg1)
-					-> equals ('<div class="error">This is a test message</div>')
+					-> equals ('error: This is a test message')
 				;
 			},
 
@@ -166,26 +166,12 @@
 
 				assert('Dotink\Flourish\Message::compose')
 					-> using  ($msg1)
-					-> with   ('%n: %m')
-					-> equals ('error: This is a test message')
+					-> with   (function($name, $message) {
+						?><div class="<?= $name ?>"><?= $message ?></div><?php
+					})
+					-> equals ('<div class="error">This is a test message</div>')
 				;
-			},
-
-			//
-			//
-			//
-
-			'compose() [With Components]' => function($data)
-			{
-				$msg1 = new Message('error', 'This is %s message #%d');
-
-				assert('Dotink\Flourish\Message::compose')
-					-> using  ($msg1)
-					-> with   ('%n: %m', 'probably', 5)
-					-> equals ('error: This is probably message #5')
-				;
-			},
-
+			}
 		]
 	];
 }

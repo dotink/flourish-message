@@ -6,7 +6,7 @@ The `Message` class provides a simple way to set messages (usually in a controll
 Creating a new message object with an actual message will store it in the session:
 
 ```php
-$message = new Message('success', 'Thanks %s, your profile has been saved!');
+$message = new Message('success', 'Thanks, your profile has been saved!');
 ```
 
 In most use cases, such a message would be set for example during the `POST` of a form (if successful), then the user might be redirected to a totally different controller, which in turn could retrieve the message and display it:
@@ -15,5 +15,5 @@ In most use cases, such a message would be set for example during the `POST` of 
 $message = new Message('success');
 $message->retrieve();
 
-echo $message->compose(NULL, $user->getFirstName());
+echo $message->compose();
 ```

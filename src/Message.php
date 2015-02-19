@@ -116,8 +116,8 @@
 				$_SESSION[self::getKey($this->name, $this->domain)] = $this->message;
 			}
 
-			$this->formatter = function($message) {
-				echo $message;
+			$this->formatter = function($name, $message) {
+				echo sprintf('%s: %s', $name, $message);
 			};
 		}
 
@@ -149,7 +149,7 @@
 
 			if ($this->message) {
 				ob_start();
-				$formatter($this->message, $this->domain);
+				$formatter($this->name, $this->message, $this->domain);
 
 				return ob_get_clean();
 			}

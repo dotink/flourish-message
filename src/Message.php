@@ -3,13 +3,13 @@
 	/**
 	 * Provides session-based messaging for page-to-page communication
 	 *
-	 * @copyright  Copyright (c) 2007-2012 Will Bond, others
-	 * @author     Will Bond           [wb]  <will@flourishlib.com>
-	 * @author     Matthew J. Sahagian [mjs] <msahagian@dotink.org>
+	 * @copyright Copyright (c) 2007-2015 Will Bond, Matthew J. Sahagian, others
+	 * @author Will Bond [wb] <will@flourishlib.com>
+	 * @author Matthew J. Sahagian [mjs] <msahagian@dotink.org>
 	 *
-	 * @license    Please reference the LICENSE.md file at the root of this distribution
+	 * @license Please reference the LICENSE.md file at the root of this distribution
 	 *
-	 * @package    Flourish
+	 * @package Flourish
 	 */
 	class Message
 	{
@@ -20,28 +20,37 @@
 		/**
 		 * The domain of the message
 		 *
-		 * @access private
+		 * @access protected
 		 * @var string
 		 */
-		private $domain = NULL;
+		protected $domain = NULL;
+
+
+		/**
+		 * A callable formatter for formatting validation messages
+		 *
+		 * @access protected
+		 * @var callable
+		 */
+		protected $formatter = NULL;
 
 
 		/**
 		 * The text of the message
 		 *
-		 * @access private
+		 * @access protected
 		 * @var string
 		 */
-		private $message = NULL;
+		protected $message = NULL;
 
 
 		/**
 		 * The name of the message
 		 *
-		 * @access private
+		 * @access protected
 		 * @var string
 		 */
-		private $name = NULL;
+		protected $name = NULL;
 
 
 		/**
@@ -63,12 +72,12 @@
 		/**
 		 * Get a normalized key for the message
 		 *
-		 * @access private
+		 * @access protected
 		 * @param string $name The name of the message
 		 * @param string $domain The domain of the message, default NULL
 		 * @return string The normalized key
 		 */
-		static private function getKey($name, $domain = NULL)
+		static protected function getKey($name, $domain = NULL)
 		{
 			if ($domain === NULL) {
 				$domain = self::DEFAULT_DOMAIN;
@@ -106,6 +115,10 @@
 			if (isset($this->message)) {
 				$_SESSION[self::getKey($this->name, $this->domain)] = $this->message;
 			}
+
+			$this->formatter = function($message) {
+				echo $message;
+			};
 		}
 
 
@@ -122,48 +135,26 @@
 
 
 		/**
-		 * Composes a message for output with a provided format
-		 *
-		 * The format parameter is an sprintf style string which can contain %n to place the name
-		 * of the message, and %m to place the contents.
+		 * Composes a message for output with an optionally provided formatter
 		 *
 		 * @access public
 		 * @param string $domain The domain to show the message from
-		 * @param string $format The format of the outputted message
+		 * @param callable $formatter A callable formatter to output the message
 		 * @return string The name and/or message placed in the format string
 		 *
 		 */
-		public function compose($format = NULL)
+		public function compose(callable $formatter = NULL)
 		{
-			$args    = array_slice(func_get_args(), 1);
-			$format  = !$format
-				? self::DEFAULT_FORMAT
-				: $format;
+			$formatter = $formatter ?: $this->formatter;
 
-			$message = class_exists(__NAMESPACE__ . '\Text')
-				? Text::create($this->message)->compose($this->domain, $args)
-				: vsprintf($this->message, $args);
+			if ($this->message) {
+				ob_start();
+				$formatter($this->message, $this->domain);
 
-			if (preg_match_all('#[%]+(n|m)#', $format, $matches)) {
-				foreach ($matches[0] as $i => $token) {
-					$num_percents = strlen(rtrim($token, 'nm'));
-
-					if ($num_percents % 2 == 1) {
-						switch ($matches[1][$i]) {
-							case 'n':
-								$replacement = str_replace('%n', $this->name, $token);
-								$format      = str_replace($token, $replacement, $format);
-								break;
-							case 'm':
-								$replacement = str_replace('%m', $message, $token);
-								$format      = str_replace($token, $replacement, $format);
-								break;
-						}
-					}
-				}
+				return ob_get_clean();
 			}
 
-			return str_replace('%%', '%', $format);
+			return NULL;
 		}
 
 

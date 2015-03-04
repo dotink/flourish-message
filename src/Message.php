@@ -14,7 +14,6 @@
 	class Message
 	{
 		const DEFAULT_DOMAIN = 'messages';
-		const DEFAULT_FORMAT = '<div class="%n">%m</div>';
 		const KEY_SEPARATOR  = '::';
 
 		/**
@@ -167,9 +166,9 @@
 		 */
 		public function exists($domain = NULL)
 		{
-			return isset($_SESSION[self::getKey($this->name, $domain)])
-				? TRUE
-				: FALSE;
+			return !isset($_SESSION[self::getKey($this->name, $domain)])
+				? FALSE
+				: TRUE;
 		}
 
 
